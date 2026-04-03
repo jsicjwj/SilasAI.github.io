@@ -11,12 +11,17 @@
              box-sizing: border-box;
              font-family: "Microsoft Yahei", sans-serif;
          }
-         body {
+         html,body {
+             height: 100%;
              background: #0f0f12;
-             height: 100vh;
+             color: #e8e8e8;
+         }
+         body {
              display: flex;
              flex-direction: column;
-             color: #e8e8e8;
+             max-width: 600px;
+             margin: 0 auto;
+             box-shadow: 0 0 20px rgba(0,0,0,0.3);
          }
          .header {
              background: rgba(30, 30, 50, 0.5);
@@ -121,6 +126,15 @@
              padding: 0 18px;
              cursor: pointer;
          }
+         /* 电脑端自适应优化 */
+         @media (min-width: 768px) {
+             body {
+                 height: 95vh;
+                 margin: 2.5vh auto;
+                 border-radius: 16px;
+                 overflow: hidden;
+             }
+         }
      </style>
  </head>
  <body>
@@ -156,32 +170,40 @@
      { q: "谢", a: "嗯嗯！很高兴帮助您～期待下次为您提供服务～😁" },
      { q: "好", a: "嘻嘻～很高兴帮助您呢～期待下次为您服务呢～😁" },
      { q: "推荐", a: "宝宝～这边大部分都不能用了呢～" }
-     
+ ];
+ const showQList = [
+     { q: "下载", a: "根据您的手机，我们点击下载页面的右上角关闭纯净模式之后再返回，就可以正常下载了～" },
+     { q: "风险", a: "不用管哦～应用在开发时都经过严格检测，点击不再通知就可以了～" },
+     { q: "闪退", a: "有两种问题哦～1.应用本身问题 2.清除一下数据再重新进入就可以啦～" },
+     { q: "怎么安装", a: "下载完成后直接点击文件，选择允许安装即可。" },
+     { q: "打不开", a: "请重启手机后再尝试打开，如仍异常可清除应用数据重试。" },
+     { q: "稳", a: "我们这边建议还是用框架哦，直装的话它有一定的风险性，框架的话我们这边依然推荐蜘蛛框架，小白鸭框架哟～" },
+     { q: "过期", a: "一般不用担心的哟，通常呢是线路出问题了，我们只要稍作等待就行，有一些话他可能要收费哦，说明这个卡密不能用了～但是更多的是前者哦！" },
+     { q: "国际服", a: "Baby，我们这边还没有国际服挂哦，之前的官网还是有的～我们原本的正官网请待通知哦～而且国际服查的很严，不建议用哦～" },
+     { q: "官服", a: "我们每一个官服的脚本和其他渠道的脚本都在每一个分享中，请自行查找哦～" },
+     { q: "警告", a: "宝贝！不建议用了，现在我们需要等个一两天之后才能用哦，你的账号正在被重点观察中哦～" },
+     { q: "卡退", a: "宝贝如果是反复多次卡退的话我们建议换个使用哦～这个不支持你的手机呢～" },
+     { q: "推荐框架", a: "宝贝，我们这边推荐的是蜘蛛框架和小白鸭框架哦～" }
  ];
  const badWords = [
      "色情","暴力","赌博","毒品","诈骗","黄赌毒","辱骂","杀人","打架","非法","违规","艹","操","槽","懆","鸡扒","鸡","巴","吃","吞","咽","精","射","喷","逼","骚"
  ];
- // 页面加载
  window.onload = function () {
      loadHistory();
-     // 历史为空时自动发欢迎语（带按钮）
      if (chat.children.length === 0) {
          addWelcomeMsg();
      }
  };
- // 欢迎语（带按钮）
  function addWelcomeMsg() {
      let div = document.createElement('div');
      div.className = 'msg bot';
-     // 文字部分
      let textDiv = document.createElement('div');
      textDiv.className = 'bot-msg-text';
      textDiv.textContent = "你好这里是智能AI客服，请问这里有什么可以帮您？是如下这些吗？";
      div.appendChild(textDiv);
-     // 按钮组
      let btnGroup = document.createElement('div');
      btnGroup.className = 'qa-btn-group';
-     qaList.forEach(item => {
+     showQList.forEach(item => {
          let btn = document.createElement('button');
          btn.className = 'qa-btn';
          btn.textContent = item.q;
@@ -196,11 +218,9 @@
      chat.scrollTop = chat.scrollHeight;
      saveHistory();
  }
- // 发送
  function send() {
      const txt = textInput.value.trim();
      if (!txt) return;
-     // 违规检测
      for (let w of badWords) {
          if (txt.includes(w)) {
              addMsg("抱歉，这不在我的服务范围内，请文明用语哦～", false);
@@ -210,7 +230,6 @@
      }
      addMsg(txt, true);
      textInput.value = "";
-     // 匹配问题
      let ans = null;
      for (let item of qaList) {
          if (txt.includes(item.q) || item.q.includes(txt)) {
@@ -222,12 +241,10 @@
          if (ans) {
              addMsg(ans, false);
          } else {
-             // 无匹配 → 发送带官Q按钮的消息
              addGroupLinkMsg();
          }
      }, 600);
  }
- // 加普通消息（不带按钮）
  function addMsg(content, isUser) {
      let div = document.createElement('div');
      div.className = isUser ? 'msg user' : 'msg bot';
@@ -236,7 +253,6 @@
      chat.scrollTop = chat.scrollHeight;
      saveHistory();
  }
- // 新增：发送官Q群消息（带按钮跳转）
  function addGroupLinkMsg() {
      let div = document.createElement('div');
      div.className = 'msg bot';
@@ -258,7 +274,6 @@
      chat.scrollTop = chat.scrollHeight;
      saveHistory();
  }
- // 保存
  function saveHistory() {
      let data = [];
      document.querySelectorAll('.msg').forEach(m => {
@@ -269,7 +284,6 @@
      });
      localStorage.chat_history = JSON.stringify(data);
  }
- // 读取
  function loadHistory() {
      if (!localStorage.chat_history) return;
      try {
@@ -282,13 +296,11 @@
          });
      } catch(e) {}
  }
- // 清空
  function clearAll() {
      chat.innerHTML = '';
      localStorage.removeItem('chat_history');
      alert('已清空聊天记录');
  }
- // 回车
  textInput.addEventListener('keypress', e => {
      if (e.key === 'Enter') send();
  });
