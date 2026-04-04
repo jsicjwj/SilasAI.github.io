@@ -126,6 +126,15 @@
              padding: 0 18px;
              cursor: pointer;
          }
+         /* 免责声明样式 */
+         .disclaimer {
+             text-align: center;
+             font-size: 11px;
+             color: #888;
+             padding: 6px;
+             background: rgba(0,0,0,0.2);
+             line-height: 1.3;
+         }
          /* 电脑端自适应优化 */
          @media (min-width: 768px) {
              body {
@@ -146,6 +155,11 @@
      <div class="input-bar">
          <input id="text" placeholder="输入消息..." />
          <button onclick="send()">发送</button>
+     </div>
+     <!-- 免责声明 -->
+     <div class="disclaimer">
+         本程序仅为前端技术演示与学习交流使用，不提供非法服务。<br>
+         使用者需遵守当地法律法规，一切滥用、修改及衍生行为由使用者自行承担全部责任。
      </div>
  <script>
  const chat = document.getElementById('chat');
